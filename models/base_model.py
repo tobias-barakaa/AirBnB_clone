@@ -1,14 +1,15 @@
 import uuid
 from datetime import datetime
 
+
 class BaseModel:
     """
-    A base model class that defines common attributes and methods for other classes.
+    A base model class that defines common att and methods for other classes.
 
     Attributes:
         id (str): Unique identifier assigned to an instance (UUID).
         created_at (datetime): Date and time when the instance was created.
-        updated_at (datetime): Date and time when the instance was last updated.
+        updated_at (dtt): Date and time when the instance was last updated.
 
     Methods:
         __str__(): Returns a string representation of the object.
@@ -22,7 +23,7 @@ class BaseModel:
         Initializes a new instance of the BaseModel class.
 
         This constructor sets the `id` attribute to a unique identifier (UUID),
-        `created_at` attribute to the current datetime, and `updated_at` attribute
+        `created_at` att to the current datetime, and `updated_at` attribute
         to the same value.
 
         """
@@ -56,9 +57,9 @@ class BaseModel:
         """
         Returns a dictionary representation of the object.
 
-        This method returns a dictionary containing all the instance attributes,
+        This method returns a dictionary contaig all the instance attributes,
         including the '__class__' key with the class name. The 'created_at' and
-        'updated_at' attributes are converted to string objects in the ISO format.
+        'updated_at' att are converted to string objects in the ISO format.
 
         Returns:
             dict: Dictionary representation of the object.
@@ -69,4 +70,3 @@ class BaseModel:
         data['created_at'] = self.created_at.isoformat()
         data['updated_at'] = self.updated_at.isoformat()
         return data
-
