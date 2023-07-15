@@ -36,7 +36,7 @@ class BaseModel:
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = self.created_at
-
+        if len(kwargs):
         for key, value in kwargs.items():
             if key == 'created_at' or key == 'updated_at':
                 value = datetime.fromisoformat(value)
