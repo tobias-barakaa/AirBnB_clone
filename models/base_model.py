@@ -2,53 +2,33 @@
 """
 fun class base model do everuthing
 """
+import models
 import uuid
 from datetime import datetime
-import models
-
 
 class BaseModel:
-    """
-    our code insert here
-    """
     def __init__(self, *args, **kwargs):
-        """
-        constructor of base Model
-        """
-        if not kwargs:
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "__class__":
+                    continue
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                setattr(self, key, value)
+        else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            models.storage.new(self)
-        else:
-            for key, val in kwargs.items():
-                if key == 'created_at' or key == 'updated_at':
-                    dataTime = "%Y-%m-%dT %H:%M:%S.%f"
-                    val = datetime.strptime(kwargs[key], dataTime)
-                if key != '__class__':
-                    setattr(self, key, val)
+            self.updated_at = self.created_at
 
     def __str__(self):
-        """
-        method for named
-        """
-        nameClass = self.__class__.__name__
-        return ("[{}] ({}) {}".format(nameClass, self.id, self.__dict__))
+        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        """
-        method for save stuff
-        """
         self.updated_at = datetime.now()
-        models.storage.save()
 
     def to_dict(self):
-        """
-        method for create a dict
-        """
-        new_dict = dict(self.__dict__)
-        new_dict["__class__"] = self.__class__.__name__
-        formatTime = "%Y-%m-%dT %H:%M:%S.%f"
-        new_dict["created_at"] = self.created_at.strftime(formatTime)
-        new_dict["updated_at"] = self.updated_at.strftime(formatTime)
-        return new_dict
+        data = self.__dict__.copy()
+        data['__class__'] = self.__class__.__name__
+        data['created_at'] = self.created_at.isoformat()
+        data['updated_at'] = self.updated_at.isoformat()
+        return data
