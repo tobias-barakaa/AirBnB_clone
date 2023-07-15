@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 
-class BaseModel:
+class BaseModel():
     """
     A base model class that defines common att and methods for other classes.
 
