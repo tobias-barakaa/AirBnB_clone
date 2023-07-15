@@ -1,8 +1,5 @@
-#!/usr/bin/python3
 import uuid
 from datetime import datetime
-import models
-
 
 class BaseModel:
     def __init__(self, *args, **kwargs):
@@ -15,15 +12,14 @@ class BaseModel:
                 setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.today()
+            self.created_at = datetime.now()
             self.updated_at = self.created_at
 
     def __str__(self):
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        self.updated_at = datetime.today()
-        models.storage.save()
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         data = self.__dict__.copy()
@@ -31,4 +27,3 @@ class BaseModel:
         data['created_at'] = self.created_at.isoformat()
         data['updated_at'] = self.updated_at.isoformat()
         return data
-
