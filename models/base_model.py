@@ -1,34 +1,56 @@
 #!/usr/bin/python3
-"""
-fun class base model do everuthing
-"""
-import models
+"""[Base model module for HBnB Holberton's project]"""
 import uuid
 from datetime import datetime
+import models
+
 
 class BaseModel:
-    def __init__(self, *args, **kwargs):
+    """[BaseModel class for the HBnB Holberton's project]
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        """[Constructor that initializes a new instance of BaseModel]
+        """
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
         if kwargs:
             for key, value in kwargs.items():
                 if key == "__class__":
-                    continue
-                if key == "created_at" or key == "updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                setattr(self, key, value)
+                    pass
+                elif key != "created_at" and key != "updated_at":
+                    self.__dict__[key] = value
+                else:
+                    self.__dict__[key] = datetime.strptime(
+                        value, "%Y-%m-%dT%H:%M:%S.%f")
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = self.created_at
+            models.storage.new(self)
 
-    def __str__(self):
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+    def __str__(self) -> str:
+        """[Changing the str method expected output to :
+        [<class name>] (<self.id>) <self.__dict__>]
+
+        Returns:
+            str: [description with the information changed]
+        """
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        self.updated_at = datetime.now()
+        """[Function that updates the update_date]
+        """
+        self.updated_at = datetime.today()
+        models.storage.save()
 
     def to_dict(self):
-        data = self.__dict__.copy()
-        data['__class__'] = self.__class__.__name__
-        data['created_at'] = self.created_at.isoformat()
-        data['updated_at'] = self.updated_at.isoformat()
-        return data
+        """[Function that returns an specific information about the class
+        in a dict]
+
+        Returns:
+            [dict]: [The atttributes with the format required]
+        """
+        copy = self.__dict__.copy()
+        copy["__class__"] = self.__class__.__name__
+        copy["created_at"] = self.created_at.isoformat()
+        copy["updated_at"] = self.updated_at.isoformat()
+        return copy
