@@ -34,7 +34,7 @@ class BaseModel:
                       Keys can be attribute names and
                       values are corresponding values.
         """
-        if kwargs:
+        if (len(kwargs)):
             for key, value in kwargs.items():
                 if key == "__class__":
                     continue
