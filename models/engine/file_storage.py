@@ -1,6 +1,11 @@
+#!/usr/bin/python3
+"""
+json serioulize/deserialize
+"""
 import json
 from collections import OrderedDict
 from models.base_model import BaseModel
+
 
 class FileStorage:
     __file_path = "file.json"
