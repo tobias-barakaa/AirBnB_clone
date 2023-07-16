@@ -70,27 +70,3 @@ class BaseModel:
         obj_dict['created_at'] = self.created_at.isoformat()
         obj_dict['updated_at'] = self.updated_at.isoformat()
         return obj_dict
-
-
-if __name__ == "__main__":
-    my_model = BaseModel()
-    my_model.name = "My_First_Model"
-    my_model.my_number = 89
-    print(my_model.id)
-    print(my_model)
-    print(type(my_model.created_at).__name__)
-    print("--")
-    my_model_json = my_model.to_dict()
-    print(my_model_json)
-    print("JSON of my_model:")
-    for key, value in my_model_json.items():
-        print("\t{}: ({}) - {}".format(key, type(value).__name__, value))
-
-    print("--")
-    my_new_model = BaseModel(**my_model_json)
-    print(my_new_model.id)
-    print(my_new_model)
-    print(type(my_new_model.created_at).__name__)
-
-    print("--")
-    print(my_model is my_new_model)
