@@ -7,17 +7,20 @@ import models
 
 class BaseModel:
     """
-    A base model class that defines common attributes and methods for other classes.
+    A base model class that defines
+    common attributes and methods for other classes.
 
     Attributes:
         id (str): Unique identifier assigned to an instance (UUID).
         created_at (datetime): Date and time when the instance was created.
-        updated_at (datetime): Date and time when the instance was last updated.
+        updated_at (datetime): Date and time when the instance
+        was last updated.
 
     Methods:
         __init__(**kwargs): Initializes a new instance of the BaseModel class.
         __str__(): Returns a string representation of the object.
-        save(): Updates the `updated_at` attribute with the current datetime and saves the instance.
+        save(): Updates the `updated_at` attribute with the
+        current datetime and saves the instance.
         to_dict(): Returns a dictionary representation of the object.
 
     """
@@ -28,8 +31,8 @@ class BaseModel:
 
         Args:
             **kwargs: Keyword arguments to set instance attributes.
-                      Keys can be attribute names and values are corresponding values.
-
+                      Keys can be attribute names and
+                      values are corresponding values.
         """
         if kwargs:
             for key, value in kwargs.items():
@@ -48,18 +51,23 @@ class BaseModel:
         """
         Returns a string representation of the object.
 
-        The string format is: "[<class name>] (<id>) <attribute dictionary>"
+        The string format is: "[<class name>] (<id>)
+        <attribute dictionary>"
 
         Returns:
         Returns:
             str: String representation of the object.
 
         """
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(
+            self.__class__.__name__,
+            self.id,
+            self.__dict__
+            )
 
     def save(self):
         """
-        Updates the `updated_at` attribute with the current datetime and saves the instance.
+        Updates the `updated_at` attribute with the current date the instance.
 
         This method should be called whenever an object is modified.
 
@@ -67,14 +75,12 @@ class BaseModel:
         self.updated_at = datetime.now()
         models.storage.save()
 
-
     def to_dict(self):
         """
         Returns a dictionary representation of the object.
-
-        This method returns a dictionary containing all the instance attributes,
-        including the '__class__' key with the class name. The 'created_at' and
-        'updated_at' attributes are converted to string objects in the ISO format.
+        This method returns a dictionary containing all the instance attrs,
+        including the '__class__'key with the class name.The'created_at' and
+        'updated_at'attributes are converted to stringobjects in the ISO fomat.
 
         Returns:
             dict: Dictionary representation of the object.
