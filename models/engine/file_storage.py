@@ -1,57 +1,39 @@
-#!/usr/bin/python3
-"""
-Module file_storage serializes and
-deserializes JSON types
-"""
-
 import json
+from collections import OrderedDict
 from models.base_model import BaseModel
-from models.user import User
-
 
 class FileStorage:
-    """
-    Custom class for file storage
-    """
-
     __file_path = "file.json"
-    __objects = {}
+    __objects = OrderedDict()
 
     def all(self):
-        """
-        Returns dictionary representation of all objects
-        """
+        """Return the dictionary __objects."""
         return self.__objects
 
-    def new(self, object):
-        """sets in __objects the object with the key
-        <object class name>.id
-
-        Args:
-            object(obj): object to write
-
-        """
-        self.__objects[object.__class__.__name__ + '.' + str(object)] = object
+    def new(self, obj):
+        """Set in __objects the obj with key <obj class name>.id."""
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        self.__objects[key] = obj
 
     def save(self):
-        """
-        serializes __objects to the JSON file
-        (path: __file_path)
-        """
-        with open(self.__file_path, 'w+') as f:
-            json.dump({k: v.to_dict() for k, v in self.__objects.items()
-                       }, f)
+        """Serialize __objects to the JSON file (path: __file_path)."""
+        data = {}
+        for key, obj in self.__objects.items():
+            data[key] = obj.to_dict()
+        with open(self.__file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file)
 
     def reload(self):
         """
-        deserializes the JSON file to __objects, if the JSON
-        file exists, otherwise nothing happens)
+        Deserialize the JSON file to __objects (only if the JSON file exists).
+        If the file doesn’t exist, no exception should be raised.
         """
         try:
-            with open(self.__file_path, 'r') as f:
-                dict = json.loads(f.read())
-                for value in dict.values():
-                    cls = value["__class__"]
-                    self.new(eval(cls)(**value))
-        except Exception:
+            with open(self.__file_path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                for key, value in data.items():
+                    class_name, obj_id = key.split(".")
+                    obj = globals()[class_name](**value)
+                    self.__objects[key] = obj
+        except FileNotFoundError:
             pass
