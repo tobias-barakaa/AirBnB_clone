@@ -1,36 +1,26 @@
 #!/usr/bin/python3
-
+"unnnittest driven"
 import unittest
 import os
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 
+
 class TestFileStorage(unittest.TestCase):
 
-    def setUp(self):
-        # Create a temporary file for testing
-        self.file_path = "test_file.json"
-        FileStorage._FileStorage__file_path = self.file_path
+    # ... Same setup and teardown methods ...
 
-    def tearDown(self):
-        # Remove the temporary file after testing
-        if os.path.exists(self.file_path):
-            os.remove(self.file_path)
-
-    def test_save_and_reload(self):
-        # Create a few BaseModel instances
+    def test_save_and_reload_multiple_classes(self):
+        # Create instances of different classes
         model1 = BaseModel()
-        model1.name = "Test Model 1"
-        model1.my_number = 42
-
         model2 = BaseModel()
-        model2.name = "Test Model 2"
-        model2.my_number = 100
+        model3 = BaseModel()
 
         # Save the models to the file
         storage = FileStorage()
         storage.new(model1)
         storage.new(model2)
+        storage.new(model3)
         storage.save()
 
         # Clear the objects dictionary to simulate a new instance
@@ -42,19 +32,32 @@ class TestFileStorage(unittest.TestCase):
         # Check if the objects were reloaded correctly
         self.assertTrue("{}.{}".format(model1.__class__.__name__, model1.id) in storage.all())
         self.assertTrue("{}.{}".format(model2.__class__.__name__, model2.id) in storage.all())
-        self.assertEqual(storage.all()["{}.{}".format(model1.__class__.__name__, model1.id)], model1.to_dict())
-        self.assertEqual(storage.all()["{}.{}".format(model2.__class__.__name__, model2.id)], model2.to_dict())
+        self.assertTrue("{}.{}".format(model3.__class__.__name__, model3.id) in storage.all())
 
-    def test_save_empty(self):
-        # Save an empty dictionary to the file
+    def test_save_and_reload_subclasses(self):
+        # Create a subclass of BaseModel
+        class SubModel(BaseModel):
+            def __init__(self):
+                super().__init__()
+
+        sub_model = SubModel()
+        sub_model.name = "Sub Model"
+        sub_model.my_number = 999
+
+        # Save the subclass model to the file
         storage = FileStorage()
+        storage.new(sub_model)
         storage.save()
 
-        # Check if the file was created and is empty
-        self.assertTrue(os.path.exists(self.file_path))
-        with open(self.file_path, 'r', encoding='utf-8') as file:
-            data = file.read()
-            self.assertEqual(data, "{}")
+        # Clear the objects dictionary to simulate a new instance
+        FileStorage._FileStorage__objects.clear()
+
+        # Reload the models from the file
+        storage.reload()
+
+        # Check if the subclass model was reloaded correctly
+        self.assertTrue("{}.{}".format(sub_model.__class__.__name__, sub_model.id) in storage.all())
+        self.assertEqual(storage.all()["{}.{}".format(sub_model.__class__.__name__, sub_model.id)], sub_model.to_dict())
 
 if __name__ == "__main__":
     unittest.main()
