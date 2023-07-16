@@ -23,8 +23,7 @@ class Storage:
     """
     The Storage class provides a mechanism to store and manage model objects.
     """
-    THIS = self
-    def new(THIS, obj):
+    def new(self, obj):
         """
         Add a model object to the storage.
 
@@ -33,7 +32,7 @@ class Storage:
         """
         pass
 
-    def save(THIS):
+    def save(self):
         """
         Save the changes made to the stored model objects.
         """
