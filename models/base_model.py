@@ -28,16 +28,14 @@ class BaseModel:
         """
         if kwargs:
             for key, value in kwargs.items():
-                if key == "created_at":
-                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
-                if key == "updated_at":
+                if key == "created_at" or key == "updated_at":
                     value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
                 if key != "__class__":
                     setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())  # unique id
-            self.created_at = datetime.now()  # datetime when is created
-            self.updated_at = datetime.now()  # date when is updated
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
             models.storage.new(self)
 
     def __str__(self):
