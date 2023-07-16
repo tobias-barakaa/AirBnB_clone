@@ -8,92 +8,79 @@ from models.engine.file_storage import FileStorage
 
 
 class TestFileStorage(unittest.TestCase):
+    def setUp(self):
+        self.storage = FileStorage()
+        self.base_model = BaseModel()
+        self.storage.new(self.base_model)
 
-    # ... Same setup and teardown methods ...
+    def tearDown(self):
+        if os.path.exists(self.storage._FileStorage__file_path):
+            os.remove(self.storage._FileStorage__file_path)
 
-    # ... Existing tests ...
+    def test_all(self):
+        all_objects = self.storage.all()
+        self.assertIsInstance(all_objects, dict)
+        self.assertIn('BaseModel.{}'.format(self.base_model.id), all_objects)
+        self.assertEqual(all_objects['BaseModel.{}'.format(self.base_model.id)], self.base_model)
 
-    def test_save_and_reload_update_existing(self):
-        # Create a BaseModel instance
-        model = BaseModel()
-        model.name = "Test Model"
-        model.my_number = 123
+    def test_new(self):
+        new_model = BaseModel()
+        self.storage.new(new_model)
+        all_objects = self.storage.all()
+        self.assertIn('BaseModel.{}'.format(new_model.id), all_objects)
+        self.assertEqual(all_objects['BaseModel.{}'.format(new_model.id)], new_model)
 
-        # Save the model to the file
-        storage = FileStorage()
-        storage.new(model)
-        storage.save()
+    def test_save(self):
+        new_model = BaseModel()
+        self.storage.new(new_model)
+        self.storage.save()
+        self.assertTrue(os.path.exists(self.storage._FileStorage__file_path))
+        with open(self.storage._FileStorage__file_path, 'r') as file:
+            data = json.load(file)
+            self.assertIn('BaseModel.{}'.format(new_model.id), data)
+            self.assertEqual(data['BaseModel.{}'.format(new_model.id)], new_model.to_dict())
 
-        # Modify the model attributes
-        model.name = "Updated Model"
-        model.my_number = 789
+    def test_reload(self):
+        new_model = BaseModel()
+        self.storage.new(new_model)
+        self.storage.save()
+        self.storage.reload()
+        all_objects = self.storage.all()
+        self.assertIn('BaseModel.{}'.format(new_model.id), all_objects)
+        self.assertEqual(all_objects['BaseModel.{}'.format(new_model.id)], new_model)
 
-        # Save the updated model to the file
-        storage.save()
+    def test_reload_file_not_exists(self):
+        self.assertFalse(os.path.exists(self.storage._FileStorage__file_path))
+        self.storage.reload()
+        all_objects = self.storage.all()
+        self.assertEqual(len(all_objects), 1)
+        self.assertIn('BaseModel.{}'.format(self.base_model.id), all_objects)
+        self.assertEqual(all_objects['BaseModel.{}'.format(self.base_model.id)], self.base_model)
 
-        # Clear the objects dictionary to simulate a new instance
-        FileStorage._FileStorage__objects.clear()
+    def test_save_multiple_objects(self):
+        new_model1 = BaseModel()
+        new_model2 = BaseModel()
+        self.storage.new(new_model1)
+        self.storage.new(new_model2)
+        self.storage.save()
+        self.assertTrue(os.path.exists(self.storage._FileStorage__file_path))
+        with open(self.storage._FileStorage__file_path, 'r') as file:
+            data = json.load(file)
+            self.assertIn('BaseModel.{}'.format(new_model1.id), data)
+            self.assertEqual(data['BaseModel.{}'.format(new_model1.id)], new_model1.to_dict())
+            self.assertIn('BaseModel.{}'.format(new_model2.id), data)
+            self.assertEqual(data['BaseModel.{}'.format(new_model2.id)], new_model2.to_dict())
 
-        # Reload the model from the file
-        storage.reload()
+    def test_reload_invalid_data(self):
+        invalid_data = '{"invalid_key": "invalid_value"}'
+        with open(self.storage._FileStorage__file_path, 'w') as file:
+            file.write(invalid_data)
+        self.storage.reload()
+        all_objects = self.storage.all()
+        self.assertEqual(len(all_objects), 1)
+        self.assertIn('BaseModel.{}'.format(self.base_model.id), all_objects)
+        self.assertEqual(all_objects['BaseModel.{}'.format(self.base_model.id)], self.base_model)
 
-        # Check if the updated model was reloaded correctly
-        self.assertTrue("{}.{}".format(model.__class__.__name__, model.id) in storage.all())
-        self.assertEqual(storage.all()["{}.{}".format(model.__class__.__name__, model.id)], model.to_dict())
 
-    def test_save_and_reload_delete_object(self):
-        # Create a few BaseModel instances
-        model1 = BaseModel()
-        model2 = BaseModel()
-        model3 = BaseModel()
-
-        # Save the models to the file
-        storage = FileStorage()
-        storage.new(model1)
-        storage.new(model2)
-        storage.new(model3)
-        storage.save()
-
-        # Delete one of the models
-        storage.delete(model2)
-
-        # Save the changes to the file
-        storage.save()
-
-        # Clear the objects dictionary to simulate a new instance
-        FileStorage._FileStorage__objects.clear()
-
-        # Reload the models from the file
-        storage.reload()
-
-        # Check if the deleted model is not reloaded
-        self.assertTrue("{}.{}".format(model1.__class__.__name__, model1.id) in storage.all())
-        self.assertFalse("{}.{}".format(model2.__class__.__name__, model2.id) in storage.all())
-        self.assertTrue("{}.{}".format(model3.__class__.__name__, model3.id) in storage.all())
-
-    def test_save_and_reload_no_file(self):
-        # Create a BaseModel instance
-        model = BaseModel()
-        model.name = "Test Model"
-        model.my_number = 123
-
-        # Save the model to the file
-        storage = FileStorage()
-        storage.new(model)
-        storage.save()
-
-        # Remove the file
-        os.remove(storage._FileStorage__file_path)
-
-        # Clear the objects dictionary to simulate a new instance
-        FileStorage._FileStorage__objects.clear()
-
-        # Reload the models from the file (file doesn't exist)
-        storage.reload()
-
-        # Check if the object is still in memory, no exception raised
-        self.assertTrue("{}.{}".format(model.__class__.__name__, model.id) in storage.all())
-        self.assertEqual(storage.all()["{}.{}".format(model.__class__.__name__, model.id)], model.to_dict())
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
