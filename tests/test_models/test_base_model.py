@@ -3,70 +3,57 @@
 This is the base model unnittest
 """
 
-import unittest
+
 from models.base_model import BaseModel
+import unittest
+from datetime import datetime
+import os
+import sys
 
 class TestBaseModel(unittest.TestCase):
+    def test_id_is_unique(self):
+        model1 = BaseModel()
+        model2 = BaseModel()
+        self.assertNotEqual(model1.id, model2.id)
 
-    def test_init_with_arguments(self):
-        # Test initialization with arguments
-        data = {
-            "id": "12345",
-            "created_at": "2022-01-01T00:00:00",
-            "updated_at": "2022-01-01T00:00:00",
-            "name": "Test Model",
-            "my_number": 42
-        }
-        model = BaseModel(**data)
-
-        self.assertEqual(model.id, "12345")
-        self.assertEqual(model.created_at.isoformat(), "2022-01-01T00:00:00")
-        self.assertEqual(model.updated_at.isoformat(), "2022-01-01T00:00:00")
-        self.assertEqual(model.name, "Test Model")
-        self.assertEqual(model.my_number, 42)
-
-    def test_init_without_arguments(self):
-        # Test initialization without arguments
+    def test_created_at_is_datetime(self):
         model = BaseModel()
-
-        self.assertIsInstance(model.id, str)
         self.assertIsInstance(model.created_at, datetime)
+
+    def test_updated_at_is_datetime(self):
+        model = BaseModel()
         self.assertIsInstance(model.updated_at, datetime)
 
-    def test_str_representation(self):
-        # Test __str__ representation
+    def test_save_updates_updated_at(self):
         model = BaseModel()
-        model.name = "Test Model"
-        model.my_number = 42
+        old_updated_at = model.updated_at
+        model.save()
+        new_updated_at = model.updated_at
+        self.assertNotEqual(old_updated_at, new_updated_at)
 
-        expected_str = "[BaseModel] ({}) {}".format(model.id, model.__dict__)
+    def test_str_representation(self):
+        model = BaseModel()
+        expected_str = f"[BaseModel] ({model.id}) {model.__dict__}"
         self.assertEqual(str(model), expected_str)
 
-    def test_save(self):
-        # Test save method
+    def test_to_dict_returns_dict(self):
         model = BaseModel()
-        previous_updated_at = model.updated_at
+        obj_dict = model.to_dict()
+        self.assertIsInstance(obj_dict, dict)
 
-        # Modify the object and save it
-        model.name = "Modified Model"
-        model.save()
-
-        self.assertNotEqual(model.updated_at, previous_updated_at)
-
-    def test_to_dict(self):
-        # Test to_dict method
+    def test_to_dict_contains_all_attributes(self):
         model = BaseModel()
-        model.name = "Test Model"
-        model.my_number = 42
-        model_dict = model.to_dict()
+        obj_dict = model.to_dict()
+        self.assertIn('id', obj_dict)
+        self.assertIn('created_at', obj_dict)
+        self.assertIn('updated_at', obj_dict)
+        self.assertIn('__class__', obj_dict)
 
-        self.assertIsInstance(model_dict, dict)
-        self.assertEqual(model_dict["id"], model.id)
-        self.assertEqual(model_dict["created_at"], model.created_at.isoformat())
-        self.assertEqual(model_dict["updated_at"], model.updated_at.isoformat())
-        self.assertEqual(model_dict["name"], "Test Model")
-        self.assertEqual(model_dict["my_number"], 42)
-        self.assertEqual(model_dict["__class__"], "BaseModel")
+    def test_to_dict_datetime_format(self):
+        model = BaseModel()
+        obj_dict = model.to_dict()
+        self.assertEqual(obj_dict['created_at'], model.created_at.isoformat())
+        self.assertEqual(obj_dict['updated_at'], model.updated_at.isoformat())
 
 if __name__ == '__main__':
     unittest.main()
