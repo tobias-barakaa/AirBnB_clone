@@ -1,13 +1,13 @@
 #!/usr/bin/python3
-"""This module defines the BaseModel class."""
-import uuid
+"""BaseModel that defines all common attributes/methods for other classes:"""
 from datetime import datetime
 import models
+import uuid
 
 
 class BaseModel:
     """This class serves as the base model for all other classes."""
-
+    
     def __init__(self, *args, **kwargs):
         """
         Initialize a new instance of BaseModel.
@@ -33,7 +33,7 @@ class BaseModel:
                 if key != "__class__":
                     setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())
+            self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
             models.storage.new(self)
@@ -47,8 +47,8 @@ class BaseModel:
             "[<class name>] (<self.id>) <self.__dict__>"
 
         """
-        class_name = self.__class__.__name__
-        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
+        name_cls = self.__class__.__name__
+        return "[{}] ({}) {}".format(name_cls, self.id, self.__dict__)
 
     def save(self):
         """
