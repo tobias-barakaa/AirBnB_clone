@@ -39,7 +39,7 @@ class BaseModel:
                 if key == "__class__":
                     continue
                 if key == "created_at" or key == "updated_at":
-                    setattr(self, key, datetime.fromisoformat(value))
+                    setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
                 else:
                     setattr(self, key, value)
         else:
@@ -63,7 +63,7 @@ class BaseModel:
             self.__class__.__name__,
             self.id,
             self.__dict__
-            )
+        )
 
     def save(self):
         """
@@ -80,7 +80,7 @@ class BaseModel:
         Returns a dictionary representation of the object.
         This method returns a dictionary containing all the instance attrs,
         including the '__class__'key with the class name.The'created_at' and
-        'updated_at'attributes are converted to stringobjects in the ISO fomat.
+        'updated_at'attributes are converted to stringobjects in the ISO format.
 
         Returns:
             dict: Dictionary representation of the object.
@@ -89,7 +89,7 @@ class BaseModel:
         obj_dict = self.__dict__.copy()
         if 'created_at' in obj_dict:
             obj_dict['created_at'] = obj_dict['created_at'].isoformat()
-            if 'updated_at' in obj_dict:
-                obj_dict['updated_at'] = obj_dict['updated_at'].isoformat()
-                obj_dict['__class__'] = self.__class__.__name__
-                return obj_dict
+        if 'updated_at' in obj_dict:
+            obj_dict['updated_at'] = obj_dict['updated_at'].isoformat()
+        obj_dict['__class__'] = self.__class__.__name__
+        return obj_dict
