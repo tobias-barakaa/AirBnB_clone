@@ -2,39 +2,44 @@
 """
 json serioulize/deserialize
 """
+
+
 import json
-import datetime
+from collections import OrderedDict
 from models.base_model import BaseModel
 
 class FileStorage:
     __file_path = "file.json"
-    __objects = {}
+    __objects = OrderedDict()
 
     def all(self):
-        return FileStorage.__objects
+        """Return the dictionary __objects."""
+        return self.__objects
 
     def new(self, obj):
+        """Set in __objects the obj with key <obj class name>.id."""
         key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        FileStorage.__objects[key] = obj
+        self.__objects[key] = obj
 
     def save(self):
-        obj_dict = {key: obj.to_dict() for key, obj in FileStorage.__objects.items()}
-        with open(FileStorage.__file_path, "w", encoding="utf-8") as file:
-            json.dump(obj_dict, file)
+        """Serialize __objects to the JSON file (path: __file_path)."""
+        data = {}
+        for key, obj in self.__objects.items():
+            data[key] = obj.to_dict()
+        with open(self.__file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file)
 
     def reload(self):
+        """
+        Deserialize the JSON file to __objects (only if the JSON file exists).
+        If the file doesn’t exist, no exception should be raised.
+        """
         try:
-            with open(FileStorage.__file_path, "r", encoding="utf-8") as file:
-                obj_dict = json.load(file)
-                for key, value in obj_dict.items():
+            with open(self.__file_path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                for key, value in data.items():
                     class_name, obj_id = key.split(".")
-                    value["created_at"] = datetime.datetime.strptime(
-                        value["created_at"], "%Y-%m-%dT%H:%M:%S.%f"
-                    )
-                    value["updated_at"] = datetime.datetime.strptime(
-                        value["updated_at"], "%Y-%m-%dT%H:%M:%S.%f"
-                    )
-                    obj = BaseModel(**value)
-                    FileStorage.__objects[key] = obj
+                    obj = globals()[class_name](**value)
+                    self.__objects[key] = obj
         except FileNotFoundError:
             pass
