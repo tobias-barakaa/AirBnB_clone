@@ -1,11 +1,9 @@
 #!/usr/bin/python3
-
-"""
-this is a module containg the BaseModel class
-"""
-import models
+"""Basemodel class func"""
 import uuid
 from datetime import datetime
+import models
+
 
 class BaseModel:
     """
@@ -19,7 +17,7 @@ class BaseModel:
     Methods:
         __init__(**kwargs): Initializes a new instance of the BaseModel class.
         __str__(): Returns a string representation of the object.
-        save(): Updates the `updated_at` attribute with the current datetime.
+        save(): Updates the `updated_at` attribute with the current datetime and saves the instance.
         to_dict(): Returns a dictionary representation of the object.
 
     """
@@ -36,10 +34,8 @@ class BaseModel:
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = self.created_at
-        if len(kwargs):
+        
         for key, value in kwargs.items():
-            if key == 'created_at' or key == 'updated_at':
-                value = datetime.fromisoformat(value)
             setattr(self, key, value)
 
     def __str__(self):
@@ -56,7 +52,7 @@ class BaseModel:
 
     def save(self):
         """
-        Updates the `updated_at` attribute with the current datetime.
+        Updates the `updated_at` attribute with the current datetime and saves the instance.
 
         This method should be called whenever an object is modified.
 
@@ -75,9 +71,9 @@ class BaseModel:
             dict: Dictionary representation of the object.
 
         """
-        data = self.__dict__.copy()
-        data['__class__'] = self.__class__.__name__
-        data['created_at'] = self.created_at.isoformat()
-        data['updated_at'] = self.updated_at.isoformat()
-        return data
+        obj_dict = self.__dict__.copy()
+        obj_dict['__class__'] = self.__class__.__name__
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+        return obj_dict
 
