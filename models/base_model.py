@@ -2,7 +2,7 @@
 """Basemodel class func"""
 import uuid
 from datetime import datetime
-import models
+import storage
 
 
 class BaseModel:
@@ -34,7 +34,7 @@ class BaseModel:
                       Keys can be attribute names and
                       values are corresponding values.
         """
-        if (len(kwargs)):
+        if kwargs:
             for key, value in kwargs.items():
                 if key == "__class__":
                     continue
@@ -73,7 +73,7 @@ class BaseModel:
 
         """
         self.updated_at = datetime.now()
-        models.storage.save()
+        storage.save()
 
     def to_dict(self):
         """
