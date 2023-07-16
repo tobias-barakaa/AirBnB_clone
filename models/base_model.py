@@ -39,12 +39,12 @@ class BaseModel:
                 if key == "__class__":
                     continue
                 if key == "created_at" or key == "updated_at":
-                    setattr(self, key, datetime.strptime(value))
+                    setattr(self, key, datetime.fromisoformat(value))
                 else:
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
+            self.created_at = datetime.now()
             self.updated_at = self.created_at
 
     def __str__(self):
@@ -72,7 +72,7 @@ class BaseModel:
         This method should be called whenever an object is modified.
 
         """
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
