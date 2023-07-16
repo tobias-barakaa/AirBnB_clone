@@ -6,6 +6,7 @@ This is the base model unnittest
 import unittest
 from models.base_model import BaseModel
 
+
 class TestBaseModel(unittest.TestCase):
 
     def test_init_with_arguments(self):
@@ -62,11 +63,14 @@ class TestBaseModel(unittest.TestCase):
 
         self.assertIsInstance(model_dict, dict)
         self.assertEqual(model_dict["id"], model.id)
-        self.assertEqual(model_dict["created_at"], model.created_at.isoformat())
-        self.assertEqual(model_dict["updated_at"], model.updated_at.isoformat())
+        self.assertEqual(model_dict["created_at"],
+                         model.created_at.isoformat())
+        self.assertEqual(model_dict["updated_at"],
+                         model.updated_at.isoformat())
         self.assertEqual(model_dict["name"], "Test Model")
         self.assertEqual(model_dict["my_number"], 42)
         self.assertEqual(model_dict["__class__"], "BaseModel")
+
 
 if __name__ == '__main__':
     unittest.main()
