@@ -71,8 +71,8 @@ class BaseModel:
             objects in ISO format.
 
         """
-        dict_copy = self.__dict__.copy()
-        dict_copy["created_at"] = self.created_at.isoformat()
-        dict_copy["updated_at"] = self.updated_at.isoformat()
-        dict_copy['__class__'] = self.__class__.__name__
-        return dict_copy
+        data_cp = self.__dict__.copy()
+        data_cp["created_at"] = self.created_at.isoformat()
+        data_cp["updated_at"] = self.updated_at.isoformat()
+        data_cp['__class__'] = self.__class__.__name__
+        return data_cp
