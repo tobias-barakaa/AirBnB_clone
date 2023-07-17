@@ -3,6 +3,7 @@ from models.base_model import BaseModel
 from models.user import User
 from models import storage
 
+
 class HBNBCommand(cmd.Cmd):
     """Command interpreter class"""
 
@@ -23,9 +24,9 @@ class HBNBCommand(cmd.Cmd):
     def help_EOF(self):
         """Help for EOF command"""
         print("Quit the command interpreter.")
-    
+        
     # Additional help functions for other commands can be added here
-
+        
     def do_create(self, arg):
         """Creates a new instance of BaseModel, saves it, and prints the id"""
         if not arg:
@@ -40,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class name and id"""
+        """Prints the string representation instance"""
         if not arg:
             print("** class name missing **")
             return
@@ -85,7 +86,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based or not on the class name"""
+        """Prints all string representation of all instances"""
         args = arg.split()
 
         if args and args[0] not in ["BaseModel", "User"]:
@@ -96,10 +97,11 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print([str(obj) for obj in all_objs.values()])
         else:
-            print([str(obj) for obj in all_objs.values() if args[0] in str(obj)])
+            print([str(obj) for obj in all_objs.values()
+                   if args[0] in str(obj)])
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id by adding or updating attribute"""
+        """Updates an instance based on the class name"""
         if not arg:
             print("** class name missing **")
             return
@@ -130,6 +132,7 @@ class HBNBCommand(cmd.Cmd):
         instance = all_objs[key]
         setattr(instance, args[2], args[3].strip("\"'"))
         instance.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
