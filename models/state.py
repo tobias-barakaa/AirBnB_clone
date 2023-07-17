@@ -6,10 +6,5 @@ from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    """State class that inherits from BaseModel"""
+    """inheritated class State from BaseModel"""
     name = ""
-
-    def __init__(self, *args, **kwargs):
-        """Initializes State instance"""
-        super().__init__(*args, **kwargs)
-
