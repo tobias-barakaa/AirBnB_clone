@@ -5,12 +5,11 @@ json serioulize/deserialize
 
 
 import json
-from collections import OrderedDict
 from models.base_model import BaseModel
 
 class FileStorage:
     __file_path = "file.json"
-    __objects = OrderedDict()
+    __objects = {}
 
     def all(self):
         """Return the dictionary __objects."""
