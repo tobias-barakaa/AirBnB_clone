@@ -131,10 +131,31 @@ class HBNBCommand(cmd.Cmd):
                     print("** value missing **")
                 else:
                     attr_name, attr_value = args[2], args[3]
-                    setattr(instance, attr_name, attr_value)
-                    instance.save()
+                    if hasattr(instance, attr_name):
+                        attr_value = type(getattr(instance, attr_name))(attr_value)
+                        setattr(instance, attr_name, attr_value)
+                        instance.save()
+                    else:
+                        print("** attribute doesn't exist **")
             else:
                 print("** no instance found **")
+
+    def default(self, arg):
+        """Default behavior when a command is not recognized."""
+        cmd_list = arg.split(".")
+        if len(cmd_list) == 2 and cmd_list[0] in storage.classes and cmd_list[1] == "all()":
+            self.do_all(cmd_list[0])
+        elif len(cmd_list) == 2 and cmd_list[0] in storage.classes and cmd_list[1] == "count()":
+            objects = storage.all()
+            class_objects = [instance for instance in objects.values()
+                             if instance.__class__.__name__ == cmd_list[0]]
+            print(len(class_objects))
+        else:
+            cmd.Cmd.default(self, arg)
+
+    def emptyline(self):
+        """Do nothing when an empty line is entered."""
+        pass
 
 
 if __name__ == '__main__':
