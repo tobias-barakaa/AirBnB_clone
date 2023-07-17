@@ -1,146 +1,129 @@
-#!/usr/bin/python3
-"""
-Console for the AirBnB clone project.
-"""
+#!/usr/bin/env python3
 import cmd
-import sys
-import json
-from models.base_model import BaseModel
 from models import storage
-
+from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
-    prompt = "(hbnb) "
-
-    def emptyline(self):
-        """Do nothing when an empty line is entered"""
-        pass
+    prompt = '(hbnb) '
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
         return True
 
     def do_EOF(self, arg):
-        """EOF command to exit the program"""
-        print()
+        """Exit the program when EOF (Ctrl+D) is encountered"""
+        print()  # To add a new line after exiting
         return True
 
-    def help_quit(self):
-        """Help message for quit command"""
-        print("Quit command to exit the program")
-
-    def help_EOF(self):
-        """Help message for EOF command"""
-        print("EOF command to exit the program")
+    def emptyline(self):
+        """Do nothing when an empty line is entered"""
+        pass
 
     def do_create(self, arg):
-        """Create a new instance of BaseModel"""
-        if len(arg) == 0:
+        """Create a new instance of BaseModel, saves it to the JSON file, and prints the id"""
+        if not arg:
             print("** class name missing **")
-        else:
-            try:
-                # Create an instance of the provided class name
-                # Save it to the JSON file
-                # Print the instance id
-                # Example: $ create BaseModel
-                # Output: 49faff9a-6318-451f-87b6-910505c55907
-                # Implement your logic here
-                pass
-            except Exception as e:
-                print("** {}".format(str(e)))
+            return
+        try:
+            new_instance = eval(arg)()
+            new_instance.save()
+            print(new_instance.id)
+        except NameError:
+            print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints the string representation of an instance"""
-        if len(arg) == 0:
+        """Prints the string representation of an instance based on the class name and id"""
+        if not arg:
             print("** class name missing **")
+            return
+
+        args = arg.split()
+        if args[0] not in storage.classes.keys():
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        key = "{}.{}".format(args[0], args[1])
+        objects = storage.all()
+        if key in objects:
+            print(objects[key])
         else:
-            args = arg.split()
-            if args[0] not in ["BaseModel"]:
-                print("** class doesn't exist **")
-            elif len(args) < 2:
-                print("** instance id missing **")
-            else:
-                try:
-                    # Print the string representation of the instance
-                    # based on the class name and id
-                    # Example: $ show BaseModel 1234-1234-1234
-                    # Output: [BaseModel] (1234-1234-1234) {'id': '1234-1234-1234'}
-                    # Implement your logic here
-                    pass
-                except Exception as e:
-                    print("** {}".format(str(e)))
+            print("** no instance found **")
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
-        if len(arg) == 0:
+        if not arg:
             print("** class name missing **")
+            return
+
+        args = arg.split()
+        if args[0] not in storage.classes.keys():
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        key = "{}.{}".format(args[0], args[1])
+        objects = storage.all()
+        if key in objects:
+            del objects[key]
+            storage.save()
         else:
-            args = arg.split()
-            if args[0] not in ["BaseModel"]:
-                print("** class doesn't exist **")
-            elif len(args) < 2:
-                print("** instance id missing **")
-            else:
-                try:
-                    # Delete the instance based on the class name and id
-                    # Save the change to the JSON file
-                    # Example: $ destroy BaseModel 1234-1234-1234
-                    # Output: None
-                    # Implement your logic here
-                    pass
-                except Exception as e:
-                    print("** {}".format(str(e)))
+            print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all instances or instances of a specific class"""
-        if len(arg) == 0:
-            try:
-                # Print the string representation of all instances
-                # Example: $ all
-                # Output: ["[BaseModel] (1234-1234-1234) {'id': '1234-1234-1234'}"]
-                # Implement your logic here
-                pass
-            except Exception as e:
-                print("** {}".format(str(e)))
+        """Prints all string representation of all instances based or not on the class name"""
+        args = arg.split()
+        objects = storage.all()
+
+        if not args:
+            print([str(obj) for obj in objects.values()])
         else:
-            args = arg.split()
-            if args[0] not in ["BaseModel"]:
+            if args[0] not in storage.classes.keys():
                 print("** class doesn't exist **")
-            else:
-                try:
-                    # Print the string representation of instances of the specified class
-                    # Example: $ all BaseModel
-                    # Output: ["[BaseModel] (1234-1234-1234) {'id': '1234-1234-1234'}"]
-                    # Implement your logic here
-                    pass
-                except Exception as e:
-                    print("** {}".format(str(e)))
+                return
+
+            class_name = args[0]
+            filtered_objs = [str(obj) for key, obj in objects.items() if key.startswith(class_name + ".")]
+            print(filtered_objs)
 
     def do_update(self, arg):
         """Updates an instance based on the class name and id"""
-        if len(arg) == 0:
+        if not arg:
             print("** class name missing **")
-        else:
-            args = arg.split()
-            if args[0] not in ["BaseModel"]:
-                print("** class doesn't exist **")
-            elif len(args) < 2:
-                print("** instance id missing **")
-            else:
-                try:
-                    # Update the instance based on the class name, id, attribute name, and value
-                    # Save the change to the JSON file
-                    # Example: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com"
-                    # Output: None
-                    # Implement your logic here
-                    pass
-                except Exception as e:
-                    print("** {}".format(str(e)))
+            return
 
-    def do_help(self, arg):
-        """Help command to display available commands"""
-        cmd.Cmd.do_help(self, arg)
+        args = arg.split()
+        if args[0] not in storage.classes.keys():
+            print("** class doesn't exist **")
+            return
 
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        key = "{}.{}".format(args[0], args[1])
+        objects = storage.all()
+        if key not in objects:
+            print("** no instance found **")
+            return
+
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return
+
+        if len(args) < 4:
+            print("** value missing **")
+            return
+
+        obj_instance = objects[key]
+        setattr(obj_instance, args[2], args[3])
+        obj_instance.save()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
