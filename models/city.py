@@ -1,16 +1,11 @@
 #!/usr/bin/python3
 """
-class city
+class city that inherited from base model
 """
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """City class that inherits from BaseModel"""
-    state_id = ""
+    """inheritated class City from BaseModel"""
     name = ""
-
-    def __init__(self, *args, **kwargs):
-        """Initializes City instance"""
-        super().__init__(*args, **kwargs)
-
+    state_id = ""
