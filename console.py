@@ -5,6 +5,7 @@ import json
 import models
 from models.base_model import BaseModel
 
+
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     __classes = {
@@ -119,6 +120,7 @@ class HBNBCommand(cmd.Cmd):
                     pass
                 setattr(obj, attr_name, attr_value)
                 obj.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
