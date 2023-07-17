@@ -4,6 +4,8 @@ import cmd
 import json
 import models
 from models.base_model import BaseModel
+from datetime import datetime
+
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
@@ -35,12 +37,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Create a new instance of BaseModel, save it, and print the id."""
-        if not arg:
+        args = arg.split()
+        if not args:
             print("** class name missing **")
-        elif arg not in HBNBCommand.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            obj = HBNBCommand.__classes[arg]()
+            obj = HBNBCommand.__classes[args[0]]()
             obj.save()
             print(obj.id)
 
@@ -113,12 +116,34 @@ class HBNBCommand(cmd.Cmd):
                 obj = models.storage.all()[key]
                 attr_name = args[2]
                 attr_value = args[3]
-                try:
-                    attr_value = eval(attr_value)
-                except (NameError, SyntaxError):
-                    pass
-                setattr(obj, attr_name, attr_value)
-                obj.save()
+                if hasattr(obj, attr_name):
+                    attr_value = cast_attribute(attr_value)
+                    setattr(obj, attr_name, attr_value)
+                    obj.save()
+                else:
+                    print("** attribute doesn't exist **")
+
+def cast_attribute(value):
+    """Cast the attribute value to its original type."""
+    try:
+        return int(value)
+    except ValueError:
+        pass
+
+    try:
+        return float(value)
+    except ValueError:
+        pass
+
+    if value.startswith('"') and value.endswith('"'):
+        return value[1:-1]
+
+    try:
+        return datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+    except ValueError:
+        pass
+
+    return value
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
