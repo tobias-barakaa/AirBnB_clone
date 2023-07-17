@@ -3,9 +3,9 @@
 json serioulize/deserialize
 """
 
-
 import json
 from models.base_model import BaseModel
+from models.user import User
 
 class FileStorage:
     __file_path = "file.json"
@@ -38,7 +38,11 @@ class FileStorage:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split(".")
-                    obj = globals()[class_name](**value)
+                    if class_name == 'User':
+                        cls = User
+                    else:
+                        cls = eval(class_name)
+                    obj = cls(**value)
                     self.__objects[key] = obj
         except FileNotFoundError:
             pass
