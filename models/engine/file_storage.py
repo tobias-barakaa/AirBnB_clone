@@ -7,6 +7,7 @@ import json
 from models.base_model import BaseModel
 from models.user import User
 
+
 class FileStorage:
     """File storage for objects serialization/deserialization"""
 
