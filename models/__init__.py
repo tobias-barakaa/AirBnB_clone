@@ -18,6 +18,7 @@ Usage:
 
 from models.base_model import BaseModel
 import models.engine.file_storage
+from models.user import User
 
 
 class Storage:
