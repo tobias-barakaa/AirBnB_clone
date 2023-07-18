@@ -5,26 +5,15 @@ from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
-    """Command interpreter class"""
-
-    prompt = "(hbnb) "
-
-    def emptyline(self):
-        """Do nothing when an empty line is entered"""
-        pass
+    prompt = '(hbnb) '
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
         return True
 
     def do_EOF(self, arg):
-        """EOF command to exit the program"""
+        """Exit the program on EOF"""
         return True
-
-    def help_EOF(self):
-        """Help for EOF command"""
-        print("Quit the command interpreter.")
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
