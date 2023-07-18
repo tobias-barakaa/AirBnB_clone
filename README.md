@@ -1,5 +1,5 @@
 Write a class BaseModel that defines all common
-attributes/methods for other classes:
+attributes methods for other classes:
 
  How to use the console to interact with the AirBnB clone:
 
