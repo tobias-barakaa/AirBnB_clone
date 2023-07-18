@@ -6,6 +6,7 @@ class place for general stuff
 
 from models.base_model import BaseModel
 
+
 class Place(BaseModel):
     """Place class that inherits from BaseModel"""
     
