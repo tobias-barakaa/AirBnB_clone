@@ -15,26 +15,25 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
-        """Quit command to exit the program"""
+        """Quit command to exit the program."""
         return True
 
     def do_EOF(self, arg):
-        """EOF command to exit the program"""
+        """EOF command to exit the program."""
         return True
 
     def emptyline(self):
-        """Do nothing when an empty line is entered"""
+        """Do nothing when an empty line is entered."""
         pass
 
-
     def help_EOF(self):
-        """Help for EOF command"""
+        """Help for EOF command."""
         print("Quit the command interpreter.")
-        
+
     # Additional help functions for other commands can be added here
-        
+
     def do_create(self, arg):
-        """Creates a new instance of BaseModel, saves it, and prints the id"""
+        """Creates a new instance of BaseModel, saves it, and prints the id."""
         if not arg:
             print("** class name missing **")
             return
@@ -47,7 +46,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints the string representation instance"""
+        """Prints the string representation of an instance."""
         if not arg:
             print("** class name missing **")
             return
@@ -69,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id"""
+        """Deletes an instance based on the class name and id."""
         if not arg:
             print("** class name missing **")
             return
@@ -92,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances"""
+        """Prints all string representations of instances."""
         args = arg.split()
 
         if args and args[0] not in ["BaseModel", "User"]:
@@ -107,7 +106,7 @@ class HBNBCommand(cmd.Cmd):
                    if args[0] in str(obj)])
 
     def do_update(self, arg):
-        """Updates an instance based on the class name"""
+        """Updates an instance based on the class name."""
         if not arg:
             print("** class name missing **")
             return
