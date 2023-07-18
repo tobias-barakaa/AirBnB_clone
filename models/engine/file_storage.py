@@ -43,7 +43,10 @@ class FileStorage:
         """
         data = {}
         for key, obj in self.__objects.items():
-            data[key] = obj.to_dict()
+            if isinstance(obj, User):
+                data[key] = self._serialize_user(obj)
+            else:
+                data[key] = obj.to_dict()
 
         with open(self.__file_path, 'w', encoding='utf-8') as file:
             json.dump(data, file)
@@ -62,10 +65,29 @@ class FileStorage:
                 for key, value in data.items():
                     class_name, obj_id = key.split(".")
                     if class_name == 'User':
-                        cls = User
+                        obj = self._deserialize_user(value)
                     else:
                         cls = eval(class_name)
-                    obj = cls(**value)
+                        obj = cls(**value)
                     self.__objects[key] = obj
         except FileNotFoundError:
             pass
+
+    def _deserialize_user(self, obj_dict):
+        """Deserializes a User object."""
+        obj_dict.pop("__class__")
+        obj_dict["__class__"] = "User"
+        return User(**obj_dict)
+
+    def _serialize_user(self, user):
+        """Serializes a User object."""
+        obj_dict = user.to_dict()
+        obj_dict.pop("__class__")
+        obj_dict["__class__"] = "User"
+        return obj_dict
+
+
+CLASSES = {
+    # ...
+    "User": User,
+}
