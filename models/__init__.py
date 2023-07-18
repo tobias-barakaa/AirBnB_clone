@@ -38,6 +38,8 @@ class Storage:
         Save the changes made to the stored model objects.
         """
         pass
+
+
 storage = Storage()
 storage = models.engine.file_storage.FileStorage()
 storage.reload()
