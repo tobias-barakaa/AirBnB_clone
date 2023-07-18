@@ -3,7 +3,7 @@ attributes/methods for other classes:
 
  How to use the console to interact with the AirBnB clone:
 
-Launch the console by running the console.py
+Launch the console by running the python3 console.py
 
 Once the console is running, you can start interacting
 with the AirBnB clone by using commands.
