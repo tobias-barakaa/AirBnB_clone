@@ -1,15 +1,13 @@
 Write a class BaseModel that defines all common
 attributes/methods for other classes:
 
-
-
- how to use the console to interact with the AirBnB clone:
+ How to use the console to interact with the AirBnB clone:
 
 Launch the console by running the console.py
 
-Once the console is running, you can start interacting/
+Once the console is running, you can start interacting
 with the AirBnB clone by using commands.
-To create a new instance, you can use the create/
+To create a new instance, you can use the create
 command followed by the class name and attributes:
 
 (hbnb) create User email="ngairato@gmaile.com"
@@ -78,11 +76,6 @@ class name and instance ID:
 (hbnb) show State 1a2b3c4d
 This command displays the details of the State
 instance with ID 1a2b3c4d.
-
-
-
-
-
 
 
 
