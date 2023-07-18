@@ -7,7 +7,7 @@ import uuid
 
 class BaseModel:
     """This class serves as the base model for all other classes."""
-    
+
     def __init__(self, *args, **kwargs):
         """
         Initialize a new instance of BaseModel.
@@ -18,7 +18,8 @@ class BaseModel:
 
         If kwargs is not empty:
             - Each key of the dictionary is an attribute name.
-            - Each value of the dictionary is the value of the corresponding attribute.
+            - Each value of the dictionary is the value of the 
+                                       corresponding attribute.
         If kwargs is empty:
             - Assign a unique id to the 'id' attribute.
             - Assign the current datetime to the 'created_at' attribute.
