@@ -1,7 +1,7 @@
 Write a class BaseModel that defines all common
-attributes methods for other classes:
 
- How to use the console to interact with the AirBnB clone:
+In this project we show you 
+ "How to use the console to interact with the AirBnB clone:"
 
 Launch the console by running the python3 console.py
 
