@@ -24,11 +24,13 @@ class HBNBCommand(cmd.Cmd):
     def help_EOF(self):
         """Help for EOF command"""
         print("Quit the command interpreter.")
-        
-    # Additional help functions for other commands can be added here
-        
+
     def do_create(self, arg):
-        """Creates a new instance of BaseModel, saves it, and prints the id"""
+        """
+        Creates a new instance of BaseModel, saves it, and prints the id
+        
+        Usage: create <class_name>
+        """
         if not arg:
             print("** class name missing **")
             return
@@ -41,7 +43,11 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints the string representation instance"""
+        """
+        Prints the string representation of an instance
+        
+        Usage: show <class_name> <instance_id>
+        """
         if not arg:
             print("** class name missing **")
             return
@@ -63,7 +69,11 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id"""
+        """
+        Deletes an instance based on the class name and id
+        
+        Usage: destroy <class_name> <instance_id>
+        """
         if not arg:
             print("** class name missing **")
             return
@@ -86,7 +96,11 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances"""
+        """
+        Prints all string representations of all instances
+        
+        Usage: all or all <class_name>
+        """
         args = arg.split()
 
         if args and args[0] not in ["BaseModel", "User"]:
@@ -97,11 +111,14 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print([str(obj) for obj in all_objs.values()])
         else:
-            print([str(obj) for obj in all_objs.values()
-                   if args[0] in str(obj)])
+            print([str(obj) for obj in all_objs.values() if args[0] in str(obj)])
 
     def do_update(self, arg):
-        """Updates an instance based on the class name"""
+        """
+        Updates an instance based on the class name
+        
+        Usage: update <class_name> <instance_id> <attribute_name> <attribute_value>
+        """
         if not arg:
             print("** class name missing **")
             return
