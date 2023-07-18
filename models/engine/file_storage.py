@@ -38,7 +38,7 @@ class FileStorage:
         """
         Serialize __objects to a JSON file.
 
-        The dictionary of objects (__objects) will be converted to a JSON format
+        The dictionary of objects (__objects) conv to json fmt
         and stored in a file defined by __file_path.
         """
         data = {}
@@ -52,9 +52,9 @@ class FileStorage:
         """
         Deserialize the JSON file to __objects.
 
-        If the JSON file exists, it will be read and converted back to a dictionary
-        of objects (__objects) where keys are "<object class name>.<object id>" and
-        values are the objects. If the file doesn't exist, no exception will be raised.
+        If the JSON file exists, it will be read and converted to dict
+        of objects (__objects) where keys are "<object class name>.
+        values are the objects. If the file doesn't exist, no exp raised.
         """
         try:
             with open(self.__file_path, 'r', encoding='utf-8') as file:
