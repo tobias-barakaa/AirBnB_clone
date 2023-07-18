@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-class state 
+class state
 """
 from models.base_model import BaseModel
 
