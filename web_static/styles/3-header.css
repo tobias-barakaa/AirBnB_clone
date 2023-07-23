@@ -1,0 +1,12 @@
+header {
+ 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: white;
+  color: white;
+  border-bottom: 1px solid #CCCCCC;
+  display: flex;
+  align-items: center;
+}
